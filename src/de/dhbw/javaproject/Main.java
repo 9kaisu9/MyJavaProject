@@ -13,7 +13,9 @@ public class Main {
             GamePane pane = new GamePane();
             f.setContentPane(pane);
             f.pack();
-            f.setSize(500,500);
+            System.out.println(f.getHeight());
+            System.out.println(pane.getHeight());
+            f.setSize(500, 500);
             pane.start();
         });
         f.setContentPane((startScreen.getPanel1()));

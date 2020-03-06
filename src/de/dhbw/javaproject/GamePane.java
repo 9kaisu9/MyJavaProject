@@ -1,5 +1,7 @@
 package de.dhbw.javaproject;
 
+import org.w3c.dom.ls.LSOutput;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -15,21 +17,22 @@ public class GamePane extends JPanel {
     private static final int TARGET_HEIGHT = 20;
 
     private long lastTimer = System.currentTimeMillis();
-    private Player player = new Player(0, 0, 50, 20, Ingredient.BUN);
+    private Player player;
     private List<Target> targets = new ArrayList<>();
 
     private Timer timer = new Timer(1, e -> {
+
         long now = System.currentTimeMillis();
         long diff = now - lastTimer;
         lastTimer = now;
+
+        //System.out.println(player.y);
 
         player.update(diff, getWidth());
 
         for (int i = targets.size() - 1; i >= 0; i--) {
             Target target = targets.get(i);
             target.update(diff, getHeight());
-
-            System.out.println(getHeight());
 
             if (player.intersects(target)) {
                 System.out.println(target.y);
@@ -38,8 +41,7 @@ public class GamePane extends JPanel {
                 player.increaseScore();
                 targets.remove(i);
                 System.out.println("gefangen");
-            }
-            else if(target.notCaught(getHeight(), getWidth())) {
+            } else if (target.notCaught(getHeight(), getWidth())) {
                 player.decreaseScore();
                 targets.remove(i);
                 System.out.println("Boden");
@@ -61,13 +63,26 @@ public class GamePane extends JPanel {
     private Target createRandomTarget() {
         Ingredient randomIngredient;
         int newTargetX = (int) (Math.random() * (getWidth() - TARGET_WIDTH));
-        int i = (int) (Math.random() * 5);
-        switch(i) {
-            case 0: randomIngredient = Ingredient.BUN; break;
-            case 1: randomIngredient = Ingredient.CHEESE; break;
-            case 2: randomIngredient = Ingredient.LETTUCE; break;
-            case 3: randomIngredient = Ingredient.PATTY; break;
-            default: randomIngredient = Ingredient.TOMATO; break;
+        int i = (int) (Math.random() * 6);
+        switch (i) {
+            case 0:
+                randomIngredient = Ingredient.BUN;
+                break;
+            case 1:
+                randomIngredient = Ingredient.CHEESE;
+                break;
+            case 2:
+                randomIngredient = Ingredient.LETTUCE;
+                break;
+            case 3:
+                randomIngredient = Ingredient.PATTY;
+                break;
+            case 4:
+                randomIngredient = Ingredient.ONION;
+                break;
+            default:
+                randomIngredient = Ingredient.TOMATO;
+                break;
         }
         return new Target(newTargetX, 0, TARGET_WIDTH, TARGET_HEIGHT, randomIngredient);
     }
@@ -77,14 +92,17 @@ public class GamePane extends JPanel {
         super.paintComponent(g);
 
         g.setFont(new Font("Arial", Font.BOLD, 100));
-        g.drawString("" + player.getScore(), getWidth()/2, getHeight() / 2);
+        g.drawString("" + player.getScore(), getWidth() / 2, getHeight() / 2);
 
         player.paint(g, TARGET_HEIGHT, TARGET_WIDTH, getHeight());
 
         for (Target target : targets) {
             target.paint(g);
         }
+
+        Recipe.ROYALEBURGER.paint(g, TARGET_HEIGHT, TARGET_WIDTH);
     }
+
     private KeyListener keyListener = new KeyListener() {
         @Override
         public void keyTyped(KeyEvent e) {
@@ -117,9 +135,9 @@ public class GamePane extends JPanel {
     }
 
     public void start() {
+        player = new Player(285, 441, 50, 20, Ingredient.BUN);
         timer.start();
         requestFocus();
         createMissingTargets();
     }
-
 }

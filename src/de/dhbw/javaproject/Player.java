@@ -22,6 +22,7 @@ public class Player extends GameObject {
 
     public void increaseHeight(int height) {
         this.height += height;
+        this.y -= height;
     }
 
     public void increaseScore() {
