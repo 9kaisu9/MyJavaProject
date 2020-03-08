@@ -12,8 +12,8 @@ public class Target extends GameObject {
         this.ingredient = ingredient;
     }
 
-    public void update(long ms, int yBound) {
-        this.y += movement.getDy() * ms * 0.20;
+    public void update(long ms, int yBound, double fallingSpeed) {
+        this.y += movement.getDy() * ms * fallingSpeed;
     }
 
     public boolean notCaught(int yBound, int xBound) {
@@ -28,9 +28,5 @@ public class Target extends GameObject {
 
     public Ingredient getIngredient() {
         return ingredient;
-    }
-
-    public boolean isValid() {
-        return true;
     }
 }

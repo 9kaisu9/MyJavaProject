@@ -12,12 +12,13 @@ import java.util.List;
 
 public class GamePane extends JPanel {
 
+    private static final int TARGET_WIDTH = 50;
+    private static final int TARGET_HEIGHT = 20;
     private int itemsLostScore = 0;
     private int level = 1;
     private Recipe levelRecipe = pickRandomRecipe();
     private int targetNumber = 1;
-    private static final int TARGET_WIDTH = 50;
-    private static final int TARGET_HEIGHT = 20;
+    private double fallingSpeed = 0.20;
 
     private long lastTimer = System.currentTimeMillis();
     private Player player = new Player(285, 441, 50, 20);
@@ -33,7 +34,7 @@ public class GamePane extends JPanel {
 
         for (int i = targets.size() - 1; i >= 0; i--) {
             Target target = targets.get(i);
-            target.update(diff, getHeight());
+            target.update(diff, getHeight(), fallingSpeed);
 
             Ingredient validIngredient = levelRecipe.getIngredients().get(player.burgerSize());
 
@@ -44,11 +45,12 @@ public class GamePane extends JPanel {
                 if (validIngredient == target.getIngredient()) {
                     player.addIngedrient(target.getIngredient());
                     player.increaseHeight(TARGET_HEIGHT);
-                    //player.increaseScore();
+
                     targets.remove(i);
                     if (player.getBurgerIngredients().equals(levelRecipe.getIngredients())) {
                         level++;
                         levelRecipe = pickRandomRecipe();
+                        fallingSpeed += 0.1;
                         player.burgerDone(TARGET_HEIGHT, 441);
                     }
                 } else {
@@ -56,7 +58,9 @@ public class GamePane extends JPanel {
                 }
                 System.out.println("gefangen");
             } else if (target.notCaught(getHeight(), getWidth())) {
-                itemsLostScore++;
+                if (target.getIngredient() == validIngredient) {
+                    itemsLostScore++;
+                }
                 targets.remove(i);
                 System.out.println("Boden");
             }
@@ -136,7 +140,7 @@ public class GamePane extends JPanel {
 
         //braucht Überarbeitung
         g.setFont(new Font("Arial", Font.BOLD, 10));
-        g.drawString("items lost: " + itemsLostScore, getWidth() / 2, getHeight() / 2);
+        g.drawString("items lost: " + itemsLostScore, getWidth() / 3, getHeight() / 2);
 
 
         player.paint(g, TARGET_HEIGHT, TARGET_WIDTH, getHeight());

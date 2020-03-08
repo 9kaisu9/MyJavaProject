@@ -6,8 +6,6 @@ import java.util.List;
 
 public class Player extends GameObject {
 
-    private int level;
-    //private int score;
     private Movement movement = Movement.STOP;
     private List<Ingredient> burgerIngredients = new ArrayList<>();
 
