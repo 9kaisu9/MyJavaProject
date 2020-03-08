@@ -30,4 +30,7 @@ public class Target extends GameObject {
         return ingredient;
     }
 
+    public boolean isValid() {
+        return true;
+    }
 }

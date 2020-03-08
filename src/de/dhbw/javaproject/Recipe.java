@@ -3,6 +3,7 @@ package de.dhbw.javaproject;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public enum Recipe {
@@ -31,4 +32,6 @@ public enum Recipe {
             g.fillRect(400, 400 - targetHeight * (i + 1), targetWidth, targetHeight);
         }
     }
+
+
 }

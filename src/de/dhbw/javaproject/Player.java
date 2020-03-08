@@ -7,22 +7,17 @@ import java.util.List;
 public class Player extends GameObject {
 
     private int level;
-    private int score;
+    //private int score;
     private Movement movement = Movement.STOP;
     private List<Ingredient> burgerIngredients = new ArrayList<>();
 
-    public Player(double x, double y, int width, int height, Ingredient ingredient) {
+    public Player(double x, double y, int width, int height) {
         super(x, y, width, height);
-        addIngedrient(ingredient);
+        addIngedrient(Ingredient.BUN);
     }
-
+/*
     public int getScore() {
         return score;
-    }
-
-    public void increaseHeight(int height) {
-        this.height += height;
-        this.y -= height;
     }
 
     public void increaseScore() {
@@ -31,6 +26,13 @@ public class Player extends GameObject {
 
     public void decreaseScore() {
         score--;
+    }
+
+ */
+
+    public void increaseHeight(int height) {
+        this.height += height;
+        this.y -= height;
     }
 
     public void update(long ms, int xBound) {
@@ -61,4 +63,30 @@ public class Player extends GameObject {
         this.movement = movement;
     }
 
+    public void clearIngredients() {
+        burgerIngredients.clear();
+        burgerIngredients.add(Ingredient.BUN);
+    }
+
+    public int burgerSize() {
+        return burgerIngredients.size();
+    }
+
+    public List<Ingredient> getBurgerIngredients() {
+        return burgerIngredients;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    public void setY(double y) {
+        this.y = y;
+    }
+
+    public void burgerDone(int targetHeight, double y) {
+        clearIngredients();
+        setHeight(targetHeight);
+        setY(y);
+    }
 }

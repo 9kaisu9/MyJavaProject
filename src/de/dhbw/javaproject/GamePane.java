@@ -12,12 +12,15 @@ import java.util.List;
 
 public class GamePane extends JPanel {
 
+    private int itemsLostScore = 0;
+    private int level = 1;
+    private Recipe levelRecipe = pickRandomRecipe();
     private int targetNumber = 1;
     private static final int TARGET_WIDTH = 50;
     private static final int TARGET_HEIGHT = 20;
 
     private long lastTimer = System.currentTimeMillis();
-    private Player player;
+    private Player player = new Player(285, 441, 50, 20);
     private List<Target> targets = new ArrayList<>();
 
     private Timer timer = new Timer(1, e -> {
@@ -26,23 +29,34 @@ public class GamePane extends JPanel {
         long diff = now - lastTimer;
         lastTimer = now;
 
-        //System.out.println(player.y);
-
         player.update(diff, getWidth());
 
         for (int i = targets.size() - 1; i >= 0; i--) {
             Target target = targets.get(i);
             target.update(diff, getHeight());
 
+            Ingredient validIngredient = levelRecipe.getIngredients().get(player.burgerSize());
+
             if (player.intersects(target)) {
                 System.out.println(target.y);
-                player.addIngedrient(target.getIngredient());
-                player.increaseHeight(TARGET_HEIGHT);
-                player.increaseScore();
-                targets.remove(i);
+
+
+                if (validIngredient == target.getIngredient()) {
+                    player.addIngedrient(target.getIngredient());
+                    player.increaseHeight(TARGET_HEIGHT);
+                    //player.increaseScore();
+                    targets.remove(i);
+                    if (player.getBurgerIngredients().equals(levelRecipe.getIngredients())) {
+                        level++;
+                        levelRecipe = pickRandomRecipe();
+                        player.burgerDone(TARGET_HEIGHT, 441);
+                    }
+                } else {
+                    //Verloren-Screen
+                }
                 System.out.println("gefangen");
             } else if (target.notCaught(getHeight(), getWidth())) {
-                player.decreaseScore();
+                itemsLostScore++;
                 targets.remove(i);
                 System.out.println("Boden");
             }
@@ -87,12 +101,43 @@ public class GamePane extends JPanel {
         return new Target(newTargetX, 0, TARGET_WIDTH, TARGET_HEIGHT, randomIngredient);
     }
 
+    private Recipe pickRandomRecipe() {
+        Recipe randomRecipe;
+        int i = (int) (Math.random() * 6);
+        switch (i) {
+            case 0:
+                randomRecipe = Recipe.ROYALEBURGER;
+                break;
+            case 1:
+                randomRecipe = Recipe.CHEESEBURGER;
+                break;
+            case 2:
+                randomRecipe = Recipe.HAMBURGER;
+                break;
+            case 3:
+                randomRecipe = Recipe.TOWERBURGER;
+                break;
+            case 4:
+                randomRecipe = Recipe.VEGANBURGER;
+                break;
+            default:
+                randomRecipe = Recipe.VEGGIEBURGER;
+                break;
+        }
+        return randomRecipe;
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        g.setFont(new Font("Arial", Font.BOLD, 100));
-        g.drawString("" + player.getScore(), getWidth() / 2, getHeight() / 2);
+        g.setFont(new Font("Arial", Font.BOLD, 30));
+        g.drawString("" + level, getWidth() / 2, getHeight() / 2);
+
+        //braucht Überarbeitung
+        g.setFont(new Font("Arial", Font.BOLD, 10));
+        g.drawString("items lost: " + itemsLostScore, getWidth() / 2, getHeight() / 2);
+
 
         player.paint(g, TARGET_HEIGHT, TARGET_WIDTH, getHeight());
 
@@ -100,7 +145,7 @@ public class GamePane extends JPanel {
             target.paint(g);
         }
 
-        Recipe.ROYALEBURGER.paint(g, TARGET_HEIGHT, TARGET_WIDTH);
+        levelRecipe.paint(g, TARGET_HEIGHT, TARGET_WIDTH);
     }
 
     private KeyListener keyListener = new KeyListener() {
@@ -135,7 +180,6 @@ public class GamePane extends JPanel {
     }
 
     public void start() {
-        player = new Player(285, 441, 50, 20, Ingredient.BUN);
         timer.start();
         requestFocus();
         createMissingTargets();
