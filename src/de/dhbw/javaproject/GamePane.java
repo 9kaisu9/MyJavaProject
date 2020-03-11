@@ -17,7 +17,9 @@ public class GamePane extends JPanel {
     private int itemsLostScore = 0;
     private int level = 1;
     private Recipe levelRecipe = pickRandomRecipe();
-    private int targetNumber = 1;
+    private long timeBetweenTargets = 1000;
+    private long timeBetweenTargetsCounter;
+    private long lastTarget;
     private double fallingSpeed = 0.20;
 
     private long lastTimer = System.currentTimeMillis();
@@ -27,6 +29,12 @@ public class GamePane extends JPanel {
     private Timer timer = new Timer(1, e -> {
 
         long now = System.currentTimeMillis();
+
+        timeBetweenTargetsCounter = now - lastTarget;
+        if (timeBetweenTargetsCounter > timeBetweenTargets) {
+            createTarget();
+        }
+
         long diff = now - lastTimer;
         lastTimer = now;
 
@@ -34,7 +42,7 @@ public class GamePane extends JPanel {
 
         for (int i = targets.size() - 1; i >= 0; i--) {
             Target target = targets.get(i);
-            target.update(diff, getHeight(), fallingSpeed);
+            target.update(diff, fallingSpeed);
 
             Ingredient validIngredient = levelRecipe.getIngredients().get(player.burgerSize());
 
@@ -50,8 +58,9 @@ public class GamePane extends JPanel {
                     if (player.getBurgerIngredients().equals(levelRecipe.getIngredients())) {
                         level++;
                         levelRecipe = pickRandomRecipe();
-                        fallingSpeed += 0.1;
+                        fallingSpeed += 0.07;
                         player.burgerDone(TARGET_HEIGHT, 441);
+                        timeBetweenTargets -= 100;
                     }
                 } else {
                     //Verloren-Screen
@@ -66,16 +75,21 @@ public class GamePane extends JPanel {
             }
         }
 
-        createMissingTargets();
-
         repaint();
 
     });
 
+    /*
     private void createMissingTargets() {
         for (int i = 0; i < (targetNumber - targets.size()); i++) {
             targets.add(createRandomTarget());
         }
+    }
+    */
+
+    private void createTarget() {
+        targets.add(createRandomTarget());
+        lastTarget = System.currentTimeMillis();
     }
 
     private Target createRandomTarget() {
@@ -186,6 +200,6 @@ public class GamePane extends JPanel {
     public void start() {
         timer.start();
         requestFocus();
-        createMissingTargets();
+        createTarget();
     }
 }

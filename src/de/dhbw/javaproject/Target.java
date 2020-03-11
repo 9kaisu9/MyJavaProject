@@ -12,7 +12,7 @@ public class Target extends GameObject {
         this.ingredient = ingredient;
     }
 
-    public void update(long ms, int yBound, double fallingSpeed) {
+    public void update(long ms, double fallingSpeed) {
         this.y += movement.getDy() * ms * fallingSpeed;
     }
 
