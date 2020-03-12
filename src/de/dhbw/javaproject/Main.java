@@ -10,11 +10,9 @@ public class Main {
 
         f.setSize(500, 500);
         StartScreen startScreen = new StartScreen(() -> {
-            GamePane pane = new GamePane();
+            GamePane pane = new GamePane(f);
             f.setContentPane(pane);
             f.pack();
-            System.out.println(f.getHeight());
-            System.out.println(pane.getHeight());
             f.setSize(500, 500);
             pane.start();
         });

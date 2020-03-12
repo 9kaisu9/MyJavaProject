@@ -7,11 +7,13 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
 public class GamePane extends JPanel {
 
+    private JFrame f;
     private static final int TARGET_WIDTH = 50;
     private static final int TARGET_HEIGHT = 20;
     private int itemsLostScore = 0;
@@ -47,10 +49,7 @@ public class GamePane extends JPanel {
             Ingredient validIngredient = levelRecipe.getIngredients().get(player.burgerSize());
 
             if (player.intersects(target)) {
-                System.out.println(target.y);
-
-
-                if (validIngredient == target.getIngredient()) {
+                 if (validIngredient == target.getIngredient()) {
                     player.addIngedrient(target.getIngredient());
                     player.increaseHeight(TARGET_HEIGHT);
 
@@ -63,7 +62,17 @@ public class GamePane extends JPanel {
                         timeBetweenTargets -= 100;
                     }
                 } else {
-                    //Verloren-Screen
+                    resetGame();
+                    this.setVisible(false);
+
+                    StartScreen startScreen = new StartScreen(() -> {
+                        GamePane pane = new GamePane(f);
+                        f.setContentPane(pane);
+                        f.pack();
+                        f.setSize(500, 500);
+                        pane.start();
+                    });
+                    f.setContentPane((startScreen.getPanel1()));
                 }
                 System.out.println("gefangen");
             } else if (target.notCaught(getHeight(), getWidth())) {
@@ -79,13 +88,15 @@ public class GamePane extends JPanel {
 
     });
 
-    /*
-    private void createMissingTargets() {
-        for (int i = 0; i < (targetNumber - targets.size()); i++) {
-            targets.add(createRandomTarget());
-        }
+    private void resetGame() {
+        timer.stop();
+
+/*      System.out.println("blyat");
+        targets.clear();
+        levelRecipe = pickRandomRecipe();
+        level = 1;
+        itemsLostScore = 0;*/
     }
-    */
 
     private void createTarget() {
         targets.add(createRandomTarget());
@@ -192,7 +203,8 @@ public class GamePane extends JPanel {
         }
     };
 
-    public GamePane() {
+    public GamePane(JFrame f) {
+        this.f = f;
         setFocusable(true);
         addKeyListener(keyListener);
     }
