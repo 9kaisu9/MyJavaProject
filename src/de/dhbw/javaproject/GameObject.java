@@ -2,6 +2,8 @@ package de.dhbw.javaproject;
 
 import java.awt.*;
 
+/*Die Klasse GameObject bezieht sich auf alle Objekte, die im Spiel miteinander interagieren. Diese Klasse wird
+* von den herunterfallenden Targets und vom Player (dem Burger) geerbt*/
 public class GameObject {
 
     protected double x;

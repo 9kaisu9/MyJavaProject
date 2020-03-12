@@ -2,6 +2,7 @@ package de.dhbw.javaproject;
 
 import java.awt.*;
 
+/*Auflistung der 6 verschiedenen Zutaten (Ingredients), die eine zugehörige RGB-Farbe besitzen*/
 public enum Ingredient {
     TOMATO(new Color (238, 0, 0)),
     PATTY(new Color(139, 69, 19)),

@@ -12,15 +12,18 @@ public class Target extends GameObject {
         this.ingredient = ingredient;
     }
 
+    /*Bewegung des Targets in Abhängigkeit vom fallingSpeed*/
     public void update(long ms, double fallingSpeed) {
         this.y += movement.getDy() * ms * fallingSpeed;
     }
 
+    /*Fragt ab, ob das Target den Boden (floor) berührt*/
     public boolean notCaught(int yBound, int xBound) {
         GameObject floor = new GameObject(0, yBound, xBound, 60);
         return this.intersects(floor);
     }
 
+    /*Zeichnet das Target in der Farbe der zugehörigen Ingredient*/
     public void paint(Graphics g) {
         g.setColor(ingredient.getColor());
         g.fillRect((int)x, (int)y, width, height);

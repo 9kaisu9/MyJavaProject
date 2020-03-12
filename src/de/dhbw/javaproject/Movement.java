@@ -1,5 +1,6 @@
 package de.dhbw.javaproject;
 
+/*Auflistung der 3 Bewegungsrichtungen (Movement) des Spielers + 1 Bewegungsrichtung der herunterfallenden Targets*/
 public enum Movement {
 
     STOP(0,0),
