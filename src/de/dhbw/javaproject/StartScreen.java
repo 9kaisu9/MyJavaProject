@@ -1,8 +1,6 @@
 package de.dhbw.javaproject;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class StartScreen {
     private JButton startButton;
@@ -16,7 +14,7 @@ public class StartScreen {
         return panel1;
     }
 
-    public interface StartScreenCallback {
-        void startGame();
+    public void createUIComponents() {
+
     }
 }

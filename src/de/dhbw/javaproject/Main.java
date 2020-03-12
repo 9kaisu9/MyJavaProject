@@ -18,7 +18,5 @@ public class Main {
         });
         f.setContentPane((startScreen.getPanel1()));
         f.setVisible(true);
-
     }
-
 }

@@ -49,7 +49,7 @@ public class GamePane extends JPanel {
             Ingredient validIngredient = levelRecipe.getIngredients().get(player.burgerSize());
 
             if (player.intersects(target)) {
-                 if (validIngredient == target.getIngredient()) {
+                if (validIngredient == target.getIngredient()) {
                     player.addIngedrient(target.getIngredient());
                     player.increaseHeight(TARGET_HEIGHT);
 
@@ -65,14 +65,16 @@ public class GamePane extends JPanel {
                     resetGame();
                     this.setVisible(false);
 
-                    StartScreen startScreen = new StartScreen(() -> {
+                    LosingScreen losingScreen = new LosingScreen(() -> {
                         GamePane pane = new GamePane(f);
                         f.setContentPane(pane);
                         f.pack();
                         f.setSize(500, 500);
                         pane.start();
                     });
-                    f.setContentPane((startScreen.getPanel1()));
+                    losingScreen.setLabelText(level, itemsLostScore);
+                    f.setContentPane((losingScreen.getPanel1()));
+
                 }
                 System.out.println("gefangen");
             } else if (target.notCaught(getHeight(), getWidth())) {
@@ -90,12 +92,6 @@ public class GamePane extends JPanel {
 
     private void resetGame() {
         timer.stop();
-
-/*      System.out.println("blyat");
-        targets.clear();
-        levelRecipe = pickRandomRecipe();
-        level = 1;
-        itemsLostScore = 0;*/
     }
 
     private void createTarget() {
